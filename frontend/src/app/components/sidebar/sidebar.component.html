@@ -1,0 +1,20 @@
+<aside class="w-50 h-screen bg-gray-900 shadow-lg text-white flex flex-col">
+  <div class="p-6 flex items-center space-x-3 border-b border-blue-800">
+    <h2 class="text-xl font-bold">Panel de Control</h2>
+  </div>
+
+  <nav class="flex-1 p-4">
+    <ul class="space-y-2">
+      <li>
+        <a [routerLink]="['/']" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-800 transition cursor-pointer">
+          <i class="fas fa-home"></i><span>Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a [routerLink]="['/productos']" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-800 transition cursor-pointer">
+          <i class="fas fa-box"></i><span>Productos</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</aside>
