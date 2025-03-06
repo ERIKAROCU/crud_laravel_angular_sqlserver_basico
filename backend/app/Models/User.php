@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'rol',
+        'is_active'
     ];
 
     /**
@@ -44,5 +46,16 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Métodos necesarios para JWT
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }

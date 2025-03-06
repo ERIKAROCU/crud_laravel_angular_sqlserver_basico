@@ -28,5 +28,17 @@ export class ProductoService {
       })
     );
   }
-  
+
+  updateProducto(producto: Producto): Observable<Producto> {
+    return this.http.put<Producto>(`${this.apiUrl}/${producto.id}`, producto);
+  }
+
+  deleteProducto(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+      catchError((error) => {
+        console.error('Error al eliminar producto', error);
+        return of(); // Retorna un observable vacío de tipo void
+      })
+    );
+  }
 }

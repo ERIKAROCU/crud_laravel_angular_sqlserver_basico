@@ -5,11 +5,13 @@ import { MatToolbarModule } from '@angular/material/toolbar'; // Importa MatTool
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ProductoFormComponent } from './components/producto-form/producto-form.component'; // Asegúrate de que 'ProductoFormComponent' esté correctamente importado
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent
+    NavbarComponent,
+    ProductoFormComponent
   ],
   imports: [
     BrowserModule,

@@ -15,6 +15,12 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    'aliases' => [
+        // otros alias
+        'JWTAuth' => PhpOpenSourceSaver\JWTAuth\Facades\JWTAuth::class,
+    ],
+
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

@@ -9,8 +9,8 @@
     
     <!-- ID Column -->
     <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef [class]="'bg-gray-800 text-gray-800 px-4 py-2 text-left'">ID</th>
-      <td mat-cell *matCellDef="let producto" class="border-b border-gray-200 px-4 py-2 text-gray-700">{{ producto.id }}</td>
+      <th mat-header-cell *matHeaderCellDef [class]="'bg-gray-800 text-gray-800 px-4 py-2 text-left'">N°</th>
+      <td mat-cell *matCellDef="let producto; let i = index" class="border-b border-gray-200 px-4 py-2 text-gray-700">{{ i + 1 }}</td>
     </ng-container>
 
     <!-- Nombre Column -->
@@ -30,6 +30,23 @@
       <th mat-header-cell *matHeaderCellDef class="bg-gray-800 text-gray-800 px-4 py-2 text-left">Cantidad</th>
       <td mat-cell *matCellDef="let producto" class="border-b border-gray-200 px-4 py-2 text-gray-700">{{ producto.cantidad }}</td>
     </ng-container>
+
+    <!-- Acciones Column -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef class="bg-gray-800 text-gray-800 px-4 py-2 text-left">Acciones</th>
+      <td mat-cell *matCellDef="let producto" class="border-b border-gray-200 px-4 py-2 text-center">
+        <!-- Botón de Editar -->
+        <button mat-icon-button (click)="editProducto(producto)" aria-label="Editar">
+          <i class="fas fa-edit"></i>
+        </button>
+        <!-- Botón de Eliminar -->
+        <button mat-icon-button (click)="deleteProducto(producto)" aria-label="Eliminar">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    </ng-container>
+
+
 
     <!-- Header y Footer -->
     <tr mat-header-row *matHeaderRowDef="displayedColumns" class="border-b border-gray-300"></tr>
