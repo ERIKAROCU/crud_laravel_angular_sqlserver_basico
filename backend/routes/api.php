@@ -14,8 +14,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
 });
 
-Route::middleware(['auth:jwt'])->group(function () {
-    Route::get('/user', function () {
-        return auth()->user();
-    });
+Route::middleware('auth:api')->group(function () {
+    Route::get('/user', [AuthController::class, 'me']);
 });

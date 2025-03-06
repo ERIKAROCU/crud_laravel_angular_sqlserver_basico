@@ -17,7 +17,8 @@ return [
 
     'aliases' => [
         // otros alias
-        'JWTAuth' => PhpOpenSourceSaver\JWTAuth\Facades\JWTAuth::class,
+        'JWTAuth' => PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory' => PHPOpenSourceSaver\JWTAuth\Facades\JWTFactory::class,
     ],
 
 
