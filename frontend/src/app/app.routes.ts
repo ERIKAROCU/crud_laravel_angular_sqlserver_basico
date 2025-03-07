@@ -6,6 +6,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ProductosComponent } from './components/productos/productos.component';
 import { AuthGuard } from './guards/auth.guard';
+import { UsersTableComponent } from './components/users/users-table/users-table.component';
 
 export const routes: Routes = [
   {
@@ -15,6 +16,7 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'productos', component: ProductosComponent },
+      { path: 'users', component: UsersTableComponent },
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' }
     ]
   },
@@ -26,5 +28,5 @@ export const routes: Routes = [
       { path: 'register', component: RegisterComponent }
     ]
   },
-  { path: '**', redirectTo: '/dashboard' } // Ruta por defecto
+  { path: '**', redirectTo: '/dashboard' }, // Ruta por defecto
 ];

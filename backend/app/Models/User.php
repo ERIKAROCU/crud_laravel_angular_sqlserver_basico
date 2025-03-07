@@ -25,6 +25,10 @@ class User extends Authenticatable implements JWTSubject // <-- Implementa la in
         'is_active',
     ];
 
+    protected $casts = [
+        'is_active' => 'boolean', // Convierte is_active a booleano
+    ];
+
     /**
      * The attributes that should be hidden for serialization.
      *
