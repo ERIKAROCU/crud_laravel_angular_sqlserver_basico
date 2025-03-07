@@ -5,10 +5,13 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 
 import { provideRouter } from '@angular/router';
 import { routes } from './app/app.routes'; // Asegúrate de importar las rutas
+import { JwtInterceptor } from './app/interceptors/jwt.interceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideHttpClient(withInterceptorsFromDi()),
-    provideRouter(routes) // ✅ Agrega las rutas aquí
+    provideRouter(routes),
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
   ]
 }).catch(err => console.error(err));

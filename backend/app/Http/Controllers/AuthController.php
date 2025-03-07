@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+// composer require php-open-source-saver/jwt-auth
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;

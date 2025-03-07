@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -29,7 +29,8 @@ export class AuthService {
 
   // Obtener información del usuario autenticado
   getUser(): Observable<any> {
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.getToken()}`);
+    const token = this.getToken();
+    const headers = { Authorization: `Bearer ${token}` };
     return this.http.get(`${this.apiUrl}/me`, { headers });
   }
 
