@@ -3,15 +3,13 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-empty-layout',
   standalone: true,
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  templateUrl: './empty-layout.component.html',
+  styleUrls: ['./empty-layout.component.css'],
   imports: [
     CommonModule,
     RouterModule
   ]
 })
-export class AppComponent {
-  title = 'frontend';
-}
+export class EmptyLayoutComponent {}

@@ -1,26 +1,30 @@
 import { Routes } from '@angular/router';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { ProductosComponent } from './components/productos/productos.component';
+import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
+import { EmptyLayoutComponent } from './layout/empty-layout/empty-layout.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-import { AuthGuard } from './auth.guard';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { ProductosComponent } from './components/productos/productos.component';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   {
-    path: '', // Si accedes a la raíz, no hay contenido ni redirección
-    component: DashboardComponent, 
-    children: [] // Sin contenido aquí
-  },
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  {
-    path: 'productos', // Solo en esta ruta se verá el contenido
-    component: ProductosComponent
+    path: '',
+    component: MainLayoutComponent, // 🔥 Layout principal
+    canActivate: [AuthGuard], // 🔒 Protege las rutas hijas
+    children: [
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'productos', component: ProductosComponent },
+      { path: '', redirectTo: '/dashboard', pathMatch: 'full' }
+    ]
   },
   {
-    path: '**', 
-    redirectTo: 'auth'
-  }
+    path: '',
+    component: EmptyLayoutComponent, // 🔥 Layout vacío
+    children: [
+      { path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent }
+    ]
+  },
+  { path: '**', redirectTo: '/dashboard' } // Ruta por defecto
 ];
