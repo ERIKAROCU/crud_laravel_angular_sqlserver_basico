@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { UsersFormComponent } from '../users-form/users-form.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from '../../../models/user.model';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-users-table',
@@ -16,6 +17,7 @@ import { User } from '../../../models/user.model';
   imports: [
     CommonModule,
     MatTableModule,
+    MatButtonModule
   ],
 })
 export class UsersTableComponent implements OnInit {
