@@ -1,23 +1,22 @@
-<aside class="w-64 h-screen bg-gradient-to-br from-indigo-700 via-blue-800 to-purple-900 shadow-xl text-white flex flex-col">
-  <div class="p-6 flex items-center space-x-3 border-b border-blue-800">
-    <h2 class="text-2xl font-bold">Panel de Control</h2>
-  </div>
-
-  <nav class="flex-1 p-4">
+<aside class="w-32 h-[calc(100vh-80px)] bg-white shadow-xl text-gray-900 flex flex-col">
+  <nav class="flex-1 p-1">
     <ul class="space-y-3">
       <li>
-        <a [routerLink]="['/']" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-purple-700 transition cursor-pointer">
-          <i class="fas fa-home"></i><span class="text-lg">Dashboard</span>
+        <a [routerLink]="['/']" class="flex flex-col items-center justify-center space-y-2 p-3 h-[150px] rounded-lg hover:bg-blue-900 hover:text-white transition cursor-pointer">
+          <i class="fas fa-home text-2xl"></i>
+          <span class="text-sm">Dashboard</span>
         </a>
       </li>
       <li>
-        <a [routerLink]="['/productos']" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-purple-700 transition cursor-pointer">
-          <i class="fas fa-box"></i><span class="text-lg">Productos</span>
+        <a [routerLink]="['/productos']" class="flex flex-col items-center justify-center space-y-2 p-3 h-[150px] rounded-lg hover:bg-blue-900 hover:text-white transition cursor-pointer">
+          <i class="fas fa-box text-2xl"></i>
+          <span class="text-sm">Productos</span>
         </a>
       </li>
       <li>
-        <a [routerLink]="['/users']" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-purple-700 transition cursor-pointer">
-          <i class="fas fa-users"></i><span class="text-lg">Usuarios</span>
+        <a [routerLink]="['/users']" class="flex flex-col items-center justify-center space-y-2 p-3 h-[150px] rounded-lg hover:bg-blue-900 hover:text-white transition cursor-pointer">
+          <i class="fas fa-users text-2xl"></i>
+          <span class="text-sm">Usuarios</span>
         </a>
       </li>
     </ul>

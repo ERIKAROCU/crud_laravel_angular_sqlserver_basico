@@ -1,12 +1,12 @@
-<mat-toolbar color="primary" class="bg-gradient-to-r from-indigo-800 via-blue-700 to-purple-700 text-white shadow-lg">
-  <span class="text-xl font-bold">CRUD Basico Laravel Angular SQLServer</span>
+<mat-toolbar class="bg-cover bg-center text-white shadow-lg h-80" style="background-image: url('/images/bg.png');">
+  <span class="tmodulo-md">CRUD Basico Laravel Angular SQLServer</span>
 
   <!-- Sección para mostrar el usuario y el botón de cerrar sesión -->
   <span class="ml-auto flex items-center space-x-4">
-    <span *ngIf="user" class="text-sm text-blak">
+    <span *ngIf="user" class="text-sm text-white">
       {{ user?.name }}
     </span>
-    <i class="fa fa-user"></i>
+    <i class="fa fa-user text-white"></i>
     <button mat-raised-button color="warn" (click)="logout()"><i class="fa fa-sign-out-alt"></i></button>
   </span>
 </mat-toolbar>

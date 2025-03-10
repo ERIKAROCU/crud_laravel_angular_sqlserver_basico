@@ -38,39 +38,52 @@ class UserController extends Controller
 
     // Actualizar un usuario existente
     public function update(Request $request, $id)
-{
-    $request->validate([
-        'name' => 'sometimes|string|max:255',
-        'email' => 'sometimes|string|email|max:255|unique:users,email,' . $id,
-        'password' => 'sometimes|nullable|string|min:6', // Validar solo si el campo está presente
-        'rol' => 'sometimes|in:admin,user',
-        'is_active' => 'sometimes|boolean',
-    ]);
+    {
+        $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|string|email|max:255|unique:users,email,' . $id,
+            'password' => 'sometimes|nullable|string|min:6', // Validar solo si el campo está presente
+            'rol' => 'sometimes|in:admin,user',
+            'is_active' => 'sometimes|boolean',
+        ]);
 
-    $user = User::find($id);
-    if (!$user) {
-        return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
+        }
+
+        // Actualizar solo los campos presentes en la solicitud
+        if ($request->has('name')) {
+            $user->name = $request->name;
+        }
+        if ($request->has('email')) {
+            $user->email = $request->email;
+        }
+        if ($request->has('password') && $request->password !== null) {
+            $user->password = bcrypt($request->password); // Hashear la nueva contraseña
+        }
+        if ($request->has('rol')) {
+            $user->rol = $request->rol;
+        }
+        if ($request->has('is_active')) {
+            $user->is_active = $request->is_active;
+        }
+
+        $user->save();
+
+        return response()->json($user);
     }
 
-    // Actualizar solo los campos presentes en la solicitud
-    if ($request->has('name')) {
-        $user->name = $request->name;
-    }
-    if ($request->has('email')) {
-        $user->email = $request->email;
-    }
-    if ($request->has('password') && $request->password !== null) {
-        $user->password = bcrypt($request->password); // Hashear la nueva contraseña
-    }
-    if ($request->has('rol')) {
-        $user->rol = $request->rol;
-    }
-    if ($request->has('is_active')) {
-        $user->is_active = $request->is_active;
-    }
+    public function destroy($id)
+    {
+        $user = User::find($id);
+        
+        if (!$user) {
+            return response()->json(['mensaje' => 'Usuario no encontrado'], 404);
+        }
 
-    $user->save();
+        $user->delete();
 
-    return response()->json($user);
+        return response()->json(['mensaje' => 'Usuario eliminado correctamente'], 200);
 }
 }

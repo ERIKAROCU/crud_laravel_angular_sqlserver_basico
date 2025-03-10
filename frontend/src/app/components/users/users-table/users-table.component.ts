@@ -74,4 +74,21 @@ export class UsersTableComponent implements OnInit {
       }
     });
   }
+
+  deleteUser(user: User): void {
+    const confirmDelete = confirm(`¿Estás seguro de que deseas eliminar a ${user.name}?`);
+    
+    if (confirmDelete) {
+      this.usersService.deleteUser(user.id).subscribe({
+        next: () => {
+          this.snackBar.open('Usuario eliminado correctamente', 'Cerrar', { duration: 3000 });
+          this.loadUsers(); // Recargar la lista después de eliminar
+        },
+        error: (error) => {
+          console.error('Error al eliminar usuario', error);
+          this.snackBar.open('Error al eliminar usuario', 'Cerrar', { duration: 3000 });
+        },
+      });
+    }
+  }
 }

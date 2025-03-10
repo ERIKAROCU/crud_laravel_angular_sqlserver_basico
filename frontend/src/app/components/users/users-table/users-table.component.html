@@ -1,6 +1,5 @@
-<!-- users-table.component.html -->
-<div class="p-6 bg-white-300 rounded-2xl shadow-lg">
-  <h2 class="text-2xl font-bold text-gray-800 mb-6">Lista de Usuarios</h2>
+<div class="p-6 bg-gray-100 rounded-2xl shadow-lg">
+  <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center">Lista de Usuarios</h2>
 
   <button
     mat-raised-button
@@ -12,82 +11,64 @@
     <span>Agregar Usuario</span>
   </button>
 
-  <!-- Users Table -->
   <div class="overflow-x-auto">
-    <table mat-table [dataSource]="users" class="w-full bg-gray-100 rounded-lg shadow-md">
-      <!-- ID Column -->
+    <table mat-table [dataSource]="users" class="w-full bg-white rounded-lg shadow-md">
+      
+      <!-- ID -->
       <ng-container matColumnDef="id">
-        <td mat-header-cell *matHeaderCellDef class="bg-blue-800 text-white py-3 px-4">N°</td>
-        <td mat-cell *matCellDef="let user" class="py-3 px-4">{{ user.id }}</td>
-      </ng-container>
+        <td mat-header-cell *matHeaderCellDef class="bg-gray-800 text-white py-3 px-4 text-center">N°</td>
+        <td mat-cell *matCellDef="let user; let i = index" class="py-3 px-4 text-center">{{ i + 1 }}</td>
+      </ng-container>      
 
-      <!-- Name Column -->
+      <!-- Nombre -->
       <ng-container matColumnDef="name">
-        <td mat-header-cell *matHeaderCellDef class="bg-blue-800 text-white py-3 px-4">Nombre</td>
+        <td mat-header-cell *matHeaderCellDef class="bg-gray-800 text-white py-3 px-4 text-center">Nombre</td>
         <td mat-cell *matCellDef="let user" class="py-3 px-4">{{ user.name }}</td>
       </ng-container>
 
-      <!-- Email Column -->
+      <!-- Email -->
       <ng-container matColumnDef="email">
-        <td mat-header-cell *matHeaderCellDef class="bg-blue-800 text-white py-3 px-4">Email</td>
+        <td mat-header-cell *matHeaderCellDef class="bg-gray-800 text-white py-3 px-4 text-center">Email</td>
         <td mat-cell *matCellDef="let user" class="py-3 px-4">{{ user.email }}</td>
       </ng-container>
 
-      <!-- Role Column -->
+      <!-- Rol -->
       <ng-container matColumnDef="rol">
-        <td mat-header-cell *matHeaderCellDef class="bg-blue-800 text-white py-3 px-4">Rol</td>
-        <td mat-cell *matCellDef="let user" class="py-3 px-4">
-          <span
-            class="px-3 py-1 rounded-full text-white text-sm font-semibold"
-            [ngClass]="{ 'bg-green-500': user.rol === 'admin', 'bg-blue-500': user.rol === 'user' }"
-          >
+        <td mat-header-cell *matHeaderCellDef class="bg-gray-800 text-white py-3 px-4 text-center">Rol</td>
+        <td mat-cell *matCellDef="let user" class="py-3 px-4 text-center">
+          <span class="px-3 py-1 rounded-full text-white text-sm font-semibold"
+            [ngClass]="{ 'bg-green-500': user.rol === 'admin', 'bg-blue-500': user.rol === 'user' }">
             {{ user.rol }}
           </span>
-        </td>
+        </td>        
       </ng-container>
 
-      <!-- Status Column -->
+      <!-- Estado -->
       <ng-container matColumnDef="is_active">
-        <td mat-header-cell *matHeaderCellDef class="bg-blue-800 text-white py-3 px-4">Estado</td>
-        <td mat-cell *matCellDef="let user" class="py-3 px-4">
-          <span
-            class="px-3 py-1 rounded-full text-white text-sm font-semibold"
-            [ngClass]="{ 'bg-green-600': user.is_active, 'bg-red-600': !user.is_active }"
-          >
+        <td mat-header-cell *matHeaderCellDef class="bg-gray-800 text-white py-3 px-4 text-center">Estado</td>
+        <td mat-cell *matCellDef="let user" class="py-3 px-4 text-center">
+          <span class="px-3 py-1 rounded-full text-white text-sm font-semibold"
+            [ngClass]="{ 'bg-green-600': user.is_active, 'bg-red-600': !user.is_active }">
             {{ user.is_active ? 'Activo' : 'Inactivo' }}
           </span>
         </td>
       </ng-container>
 
-      <!-- Actions Column -->
+      <!-- Acciones -->
       <ng-container matColumnDef="acciones">
-        <td mat-header-cell *matHeaderCellDef class="bg-blue-800 text-white py-3 px-4">Acciones</td>
-        <td mat-cell *matCellDef="let user" class="py-3 px-4 space-x-2">
-          <button
-            mat-icon-button
-            (click)="editUser(user)"
-            aria-label="Editar"
-            class="text-blue-600 hover:text-blue-800 transition duration-300"
-          >
+        <td mat-header-cell *matHeaderCellDef class="bg-gray-800 text-white py-3 px-4 text-center">Acciones</td>
+        <td mat-cell *matCellDef="let user" class="py-3 px-4 text-center space-x-2">
+          <button mat-icon-button (click)="editUser(user)" class="text-blue-600 hover:text-blue-800">
             <i class="fas fa-edit"></i>
           </button>
-          <button
-            mat-icon-button
-            aria-label="Eliminar"
-            class="text-red-600 hover:text-red-800 transition duration-300"
-          >
+          <button mat-icon-button (click)="deleteUser(user)" class="text-red-600 hover:text-red-800">
             <i class="fas fa-trash"></i>
           </button>
         </td>
       </ng-container>
 
-      <!-- Table Header and Rows -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns" class="bg-blue-900 text-white"></tr>
-      <tr
-        mat-row
-        *matRowDef="let row; columns: displayedColumns;"
-        class="hover:bg-gray-200 transition duration-200"
-      ></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
   </div>
 </div>
