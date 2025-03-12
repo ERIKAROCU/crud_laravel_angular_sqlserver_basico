@@ -1,6 +1,5 @@
-// users-form.component.ts
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UsersService } from '../../../services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -12,6 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReactiveFormsModule } from '@angular/forms';
+import { LoaderComponent } from '../../../shared/loader/loader.component';
 
 @Component({
   selector: 'app-users-form',
@@ -26,11 +26,13 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatButtonModule,
     MatDialogModule,
     ReactiveFormsModule,
+    LoaderComponent,
   ],
 })
 export class UsersFormComponent {
   userForm: FormGroup;
   isEditMode: boolean = false;
+  isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -39,104 +41,108 @@ export class UsersFormComponent {
     private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: User | null
   ) {
-    this.userForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.minLength(6)]], // No es requerido en modo edición
-      rol: ['user', [Validators.required]],
-      is_active: [true, [Validators.required]],
-    });
+    this.userForm = this.fb.group(
+      {
+        name: ['', [Validators.required, Validators.minLength(3)]],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.minLength(6)]], // AQUI: La contraseña no es requerida en edición
+        confirmPassword: [''],
+        rol: ['user', [Validators.required]],
+        is_active: [true, [Validators.required]],
+      },
+      { validators: this.passwordsMatchValidator }
+    );
 
     if (this.data) {
-      console.log('Datos del usuario:', this.data); // Verifica que is_active esté presente
       this.isEditMode = true;
-    
+      this.isLoading = true;
       this.userForm.patchValue({
         name: this.data.name,
         email: this.data.email,
         rol: this.data.rol,
-        is_active: this.data.is_active, // No necesitas convertir is_active
+        is_active: this.data.is_active,
       });
-    
-      console.log('Valor de is_active en el formulario:', this.userForm.get('is_active')?.value); // Verifica el valor asignado
-      this.userForm.get('password')?.clearValidators(); // No requerir contraseña en edición
-      this.userForm.get('password')?.updateValueAndValidity(); // Actualizar validaciones
+
+      // AQUI: Eliminamos validación de contraseña en modo edición
+      this.userForm.get('password')?.clearValidators();
+      this.userForm.get('password')?.updateValueAndValidity();
+      this.userForm.get('confirmPassword')?.clearValidators();
+      this.userForm.get('confirmPassword')?.updateValueAndValidity();
+
+      this.isLoading = false;
     }
   }
 
-  // Método para obtener mensajes de error
+  // AQUI: Validador para comprobar que las contraseñas coincidan
+  passwordsMatchValidator(group: AbstractControl): ValidationErrors | null {
+    const password = group.get('password')?.value;
+    const confirmPassword = group.get('confirmPassword')?.value;
+    return password && confirmPassword && password !== confirmPassword ? { passwordsMismatch: true } : null;
+  }
+
+  // AQUI: Método para obtener mensajes de error en los campos
   getErrorMessage(controlName: string): string {
     const control = this.userForm.get(controlName);
-    if (control?.hasError('required')) {
-      return 'Este campo es obligatorio.';
-    }
-    if (control?.hasError('minlength')) {
-      return `Mínimo ${control.errors?.['minlength'].requiredLength} caracteres.`;
-    }
-    if (control?.hasError('email')) {
-      return 'Ingresa un email válido.';
-    }
+    if (control?.hasError('required')) return 'Este campo es obligatorio.';
+    if (control?.hasError('minlength')) return `Mínimo ${control.errors?.['minlength'].requiredLength} caracteres.`;
+    if (control?.hasError('email')) return 'Ingresa un email válido.';
+    if (controlName === 'confirmPassword' && control?.parent?.hasError('passwordsMismatch')) return 'Las contraseñas no coinciden.';
     return '';
   }
 
+  // AQUI: Método para enviar datos del formulario
   onSubmit(): void {
     if (this.userForm.valid) {
-      const userData = this.userForm.value;
+      const userData = { ...this.userForm.value };
 
-      // Si estamos en modo edición y el campo de contraseña está vacío, eliminamos el campo
       if (this.isEditMode && !userData.password) {
         delete userData.password;
+        delete userData.confirmPassword;
       }
 
+      this.isLoading = true; // AQUI: Activamos el loader
       if (this.isEditMode && this.data) {
-        // Editar usuario
         this.usersService.updateUser(this.data.id, userData).subscribe({
           next: () => {
+            this.isLoading = false; // AQUI: Desactivamos el loader
             this.snackBar.open('Usuario actualizado con éxito', 'Cerrar', { duration: 3000 });
             this.dialogRef.close(true);
           },
-          error: (error) => {
-            console.error('Error al actualizar usuario', error);
-            if (error.status === 422) {
-              const errorMessage = this.formatValidationErrors(error.error.errors);
-              this.snackBar.open(errorMessage, 'Cerrar', { duration: 5000 });
-            } else {
-              this.snackBar.open('Error al actualizar usuario', 'Cerrar', { duration: 3000 });
-            }
-          },
+          error: (error) => this.handleError(error, 'Error al actualizar usuario'),
         });
       } else {
-        // Crear usuario
         this.usersService.createUser(userData).subscribe({
           next: () => {
+            this.isLoading = false; // AQUI: Desactivamos el loader
             this.snackBar.open('Usuario creado con éxito', 'Cerrar', { duration: 3000 });
             this.dialogRef.close(true);
           },
-          error: (error) => {
-            console.error('Error al crear usuario', error);
-            if (error.status === 422) {
-              const errorMessage = this.formatValidationErrors(error.error.errors);
-              this.snackBar.open(errorMessage, 'Cerrar', { duration: 5000 });
-            } else {
-              this.snackBar.open('Error al crear usuario', 'Cerrar', { duration: 3000 });
-            }
-          },
+          error: (error) => this.handleError(error, 'Error al crear usuario'),
         });
       }
     }
   }
 
-  // Formatear errores de validación del backend
-  private formatValidationErrors(errors: { [key: string]: string[] }): string {
-    let errorMessage = 'Errores de validación:\n';
-    for (const key in errors) {
-      if (errors.hasOwnProperty(key)) {
-        errorMessage += `${key}: ${errors[key].join(', ')}\n`;
-      }
+  // AQUI: Manejo de errores del backend
+  handleError(error: any, defaultMessage: string) {
+    this.isLoading = false; // AQUI: Desactivamos el loader en caso de error
+    console.error(defaultMessage, error);
+    if (error.status === 422) {
+      const errorMessage = this.formatValidationErrors(error.error.errors);
+      this.snackBar.open(errorMessage, 'Cerrar', { duration: 5000 });
+    } else {
+      this.snackBar.open(defaultMessage, 'Cerrar', { duration: 3000 });
     }
-    return errorMessage;
   }
 
+  // AQUI: Formateo de errores del backend
+  private formatValidationErrors(errors: { [key: string]: string[] }): string {
+    return Object.keys(errors)
+      .map((key) => `${key}: ${errors[key].join(', ')}`)
+      .join('\n');
+  }
+
+  // AQUI: Método para cerrar el diálogo sin guardar cambios
   onCancel(): void {
     this.dialogRef.close();
   }

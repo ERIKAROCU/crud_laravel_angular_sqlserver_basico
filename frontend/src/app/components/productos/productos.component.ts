@@ -10,6 +10,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar'; // Para mostrar mensajes de éxito o error
+import { LoaderService } from '../../shared/loader.service';
+import { MatDialogModule } from '@angular/material/dialog';
+import { LoaderComponent } from '../../shared/loader/loader.component';
 
 @Component({
   selector: 'app-productos',
@@ -21,16 +24,20 @@ import { MatSnackBar } from '@angular/material/snack-bar'; // Para mostrar mensa
     MatListModule,
     MatCardModule,
     MatTableModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDialogModule,
+    LoaderComponent
   ]
 })
 export class ProductosComponent implements OnInit {
   productos: Producto[] = [];
   displayedColumns: string[] = ['id', 'nombre', 'precio', 'cantidad', 'acciones']; // Incluye la columna eliminar
-  isLoading = true;
+  isEditMode: boolean = false;
+  isLoading: boolean = false;
 
   constructor(
     private productoService: ProductoService,
+    private loaderService: LoaderService,
     public dialog: MatDialog, // Inyecta MatDialog
     private snackBar: MatSnackBar // Inyecta MatSnackBar para mostrar mensajes
   ) {}
@@ -41,13 +48,16 @@ export class ProductosComponent implements OnInit {
 
   loadProductos(): void {
     this.isLoading = true;
+    this.loaderService.showLoader();
     this.productoService.getProductos().subscribe({
       next: (data) => {
         this.productos = data;
+        this.loaderService.hideLoader();
         this.isLoading = false;
       },
       error: (error) => {
         console.error('Error al obtener productos', error);
+        this.loaderService.hideLoader();
         this.isLoading = false;
       }
     });
@@ -56,9 +66,9 @@ export class ProductosComponent implements OnInit {
   editProducto(producto: Producto): void {
     const dialogRef = this.dialog.open(ProductoFormComponent, {
       width: '500px',
-      data: producto
+      data: { producto, isEditMode: true } // Pasa el producto y el modo
     });
-
+  
     dialogRef.afterClosed().subscribe(() => {
       this.loadProductos(); // Recarga la lista después de editar
     });
@@ -67,8 +77,9 @@ export class ProductosComponent implements OnInit {
   openDialog(): void {
     const dialogRef = this.dialog.open(ProductoFormComponent, {
       width: '500px',
+      data: { producto: null, isEditMode: false } // Pasa null para producto y el modo
     });
-
+  
     dialogRef.afterClosed().subscribe(() => {
       this.loadProductos(); // Recarga la lista después de crear
     });

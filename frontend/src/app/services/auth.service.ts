@@ -1,13 +1,14 @@
+// auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { Observable, catchError, of } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = `http://${window.location.hostname}:8000/api`;
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -30,8 +31,18 @@ export class AuthService {
   // Obtener información del usuario autenticado
   getUser(): Observable<any> {
     const token = this.getToken();
+    if (!token) {
+      this.logout(); // Si no hay token, redirige al login
+      return of(null);
+    }
+
     const headers = { Authorization: `Bearer ${token}` };
-    return this.http.get(`${this.apiUrl}/me`, { headers });
+    return this.http.get(`${this.apiUrl}/me`, { headers }).pipe(
+      catchError(() => {
+        this.logout(); // Si hay un error, cierra la sesión
+        return of(null);
+      })
+    );
   }
 
   // Verificar si el usuario está autenticado

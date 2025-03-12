@@ -1,34 +1,42 @@
-import { Component, OnInit } from '@angular/core';
+// navbar.component.ts
+import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MaterialModule } from '../../shared/material.module'; // Usa el módulo compartido
-import { AuthService } from '../../services/auth.service'; // Importa el servicio de autenticación
+import { MaterialModule } from '../../shared/material.module';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, MaterialModule], 
+  imports: [CommonModule, MaterialModule],
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
   user: any;
 
+  @Output() sidebarToggle: EventEmitter<void> = new EventEmitter();
+
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    // Obtener el usuario actual
-    this.authService.getUser().subscribe(
-      (response) => {
-        this.user = response;
-      },
-      (error) => {
-        console.error('Error al obtener el usuario', error);
-      }
-    );
+    if (this.authService.isAuthenticated()) {
+      this.authService.getUser().subscribe(
+        (response) => {
+          this.user = response;
+        },
+        (error) => {
+          console.error('Error al obtener el usuario', error);
+          this.authService.logout(); // Si hay un error, cierra la sesión
+        }
+      );
+    }
   }
 
   logout(): void {
-    // Llamar al servicio de logout
     this.authService.logout();
+  }
+
+  toggleSidebar(): void {
+    this.sidebarToggle.emit();
   }
 }

@@ -7,8 +7,10 @@ import { User } from '../models/user.model';
   providedIn: 'root'
 })
 export class UsersService {
-  private apiUrl = 'http://127.0.0.1:8000/api'; // URL de tu backend Laravel
-
+  private apiUrl = `http://${window.location.hostname}:8000/api`;
+  // private apiUrl = 'http://192.168.100.33:8000/api';
+  // private apiUrl = 'http://127.0.0.1:8000/api';
+  
   constructor(private http: HttpClient) {}
 
   // Obtener todos los usuarios

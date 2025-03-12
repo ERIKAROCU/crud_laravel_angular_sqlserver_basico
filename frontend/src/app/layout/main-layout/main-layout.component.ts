@@ -18,4 +18,10 @@ import { RouterModule } from '@angular/router';
     RouterModule
   ]
 })
-export class MainLayoutComponent {}
+export class MainLayoutComponent {
+  sidebarVisible: boolean = false;
+
+  toggleSidebar(): void {
+    this.sidebarVisible = !this.sidebarVisible;
+  }
+}

@@ -1,22 +1,23 @@
 <body class="font-sans antialiased">
-  <div class="min-h-screen bg-gray-300 flex flex-col">
-    
+  <div class="min-h-screen bg-gray-100 flex flex-col">
     <!-- Navbar -->
-    <app-navbar class="fixed top-0 left-0 w-full z-50"></app-navbar>
+    <app-navbar class="fixed top-0 left-0 w-full z-50" (sidebarToggle)="toggleSidebar()"></app-navbar>
 
-    <div class="flex flex-1">
-      <!-- Sidebar fijo -->
-      <div class="fixed left-0 top-20 w-32 h-[calc(100vh-80px)] text-white">
-        <app-sidebar></app-sidebar> 
+    <div class="flex flex-1 pt-20"> <!-- Añade pt-20 para evitar que el contenido se solape con el navbar -->
+      <!-- Sidebar: oculto en móviles por defecto, visible en escritorio si sidebarVisible es true -->
+      <div [ngClass]="{'hidden': !sidebarVisible, 'block': sidebarVisible}" 
+           class="fixed top-20 left-0 w-30 h-[calc(100vh-80px)] bg-gray-800 text-white transition-all duration-300 sm:w-30 z-40">
+        <app-sidebar></app-sidebar>
       </div>
 
       <!-- Contenido principal -->
-      <div class="flex-1 ml-32 mt-20 p-6">
-        <router-outlet></router-outlet> 
+      <div [ngClass]="{'sm:ml-32': sidebarVisible, 'sm:ml-0': !sidebarVisible}" 
+           class="flex-1 p-1 transition-all duration-300 w-full">
+        <router-outlet></router-outlet>
       </div>
     </div>
 
     <!-- Footer -->
-    <app-footer></app-footer>
+    <app-footer class="z-50 w-full"></app-footer> <!-- Añade z-50 para que el footer esté por encima del sidebar -->
   </div>
 </body>

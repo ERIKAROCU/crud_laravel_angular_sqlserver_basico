@@ -1,12 +1,31 @@
-<mat-toolbar class="bg-cover bg-center text-white shadow-lg h-80" style="background-image: url('/images/bg.png');">
-  <span class="tmodulo-md">CRUD Basico Laravel Angular SQLServer</span>
+<mat-toolbar class="bg-cover bg-center text-white shadow-lg h-20 fixed top-0 left-0 w-full z-50" style="background-image: url('/images/bg.png');">
+  <!-- Contenedor para el botón y el título -->
+  <div class="flex items-center flex-1">
+    <!-- Botón para mostrar/ocultar sidebar -->
+    <button mat-icon-button (click)="toggleSidebar()" class="mr-4">
+      <i class="fas fa-bars text-white"></i>
+    </button>
+
+    <!-- Título de la aplicación -->
+    <span class="tmodulo-md text-sm sm:text-base md:text-lg lg:text-xl flex-1 whitespace-normal sm:whitespace-nowrap">
+      CRUD Básico Laravel Angular SQLServer
+    </span>
+  </div>
 
   <!-- Sección para mostrar el usuario y el botón de cerrar sesión -->
-  <span class="ml-auto flex items-center space-x-4">
-    <span *ngIf="user" class="text-sm text-white">
+  <div class="flex items-center justify-end space-x-4">
+    <!-- Nombre del usuario -->
+    <span *ngIf="user" class="text-sm text-white whitespace-normal max-w-[150px] text-right">
       {{ user?.name }}
     </span>
+
+    <!-- Ícono de usuario -->
     <i class="fa fa-user text-white"></i>
-    <button mat-raised-button color="warn" (click)="logout()"><i class="fa fa-sign-out-alt"></i></button>
-  </span>
+
+    <!-- Botón de cerrar sesión -->
+    <button mat-raised-button color="warn" (click)="logout()" class="text-sm sm:text-base">
+      <i class="fa fa-sign-out-alt"></i>
+      <span class="hidden sm:inline-block ml-2">Cerrar sesión</span>
+    </button>
+  </div>
 </mat-toolbar>

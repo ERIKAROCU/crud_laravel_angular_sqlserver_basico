@@ -7,7 +7,9 @@ import { Producto } from '../models/producto.model'; // Importa la interfaz
   providedIn: 'root'
 })
 export class ProductoService {
-  private apiUrl = 'http://127.0.0.1:8000/api/productos';
+  private apiUrl = `http://${window.location.hostname}:8000/api/productos`;
+  // private apiUrl = 'http://192.168.100.33:8000/api/productos';
+  // private apiUrl = 'http://127.0.0.1:8000/api/productos';
 
   constructor(private http: HttpClient) { }
 

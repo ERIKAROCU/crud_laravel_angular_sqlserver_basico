@@ -8,6 +8,7 @@ import { UsersFormComponent } from '../users-form/users-form.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from '../../../models/user.model';
 import { MatButtonModule } from '@angular/material/button';
+import { LoaderComponent } from '../../../shared/loader/loader.component';
 
 @Component({
   selector: 'app-users-table',
@@ -17,12 +18,14 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     MatTableModule,
-    MatButtonModule
+    MatButtonModule,
+    LoaderComponent
   ],
 })
 export class UsersTableComponent implements OnInit {
   users: User[] = [];
   displayedColumns: string[] = ['id', 'name', 'email', 'rol', 'is_active', 'acciones'];
+  isLoading: boolean = false;
 
   constructor(
     private usersService: UsersService,
@@ -36,12 +39,15 @@ export class UsersTableComponent implements OnInit {
 
   // Load users from the service
   loadUsers(): void {
+    this.isLoading = true;
     this.usersService.getUsers().subscribe({
       next: (response) => {
         this.users = response; // No necesitas convertir is_active
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error al obtener usuarios', error);
+        this.isLoading = false;
       },
     });
   }
